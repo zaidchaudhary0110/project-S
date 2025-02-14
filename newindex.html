@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
+
+        .center-horizontally {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 7cm;
+            height: 5cm;
+            animation: floatImage 3s ease-in-out infinite; /* Floating animation for the image */
+        }
+
+        body {
+            background: linear-gradient(45deg, #ff758c, #ff7eb3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            animation: backgroundFade 5s infinite alternate;
+            transition: background 1s ease-in-out;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background: rgb(241, 225, 225);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+            width: 320px;
+            animation: fadeIn 1.5s ease-in-out, floatBox 4s ease-in-out infinite; /* Added floating animation */
+            transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+            margin-top: 20px;
+        }
+
+        .container:hover {
+            transform: scale(1.05); /* Scale up on hover */
+            box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.5); /* Enhanced shadow on hover */
+        }
+
+        button {
+            background: #ff4f7b;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+            transition: transform 0.3s ease-in-out, background 0.3s;
+            animation: bounce 1s infinite alternate;
+        }
+
+        button:hover {
+            background: #ff1e5a;
+            transform: scale(1.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-5px); }
+        }
+
+        @keyframes backgroundFade {
+            0% { background: linear-gradient(45deg, #ff758c, #ff7eb3); }
+            50% { background: linear-gradient(45deg, #ff3b6b, #ff98b7); }
+            100% { background: linear-gradient(45deg, #ff758c, #ff7eb3); }
+        }
+
+        @keyframes floatBox {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); } /* Floating effect */
+        }
+
+        @keyframes floatImage {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); } /* Floating effect for the image */
+        }
+
+        .meme {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+            animation: popIn 0.5s ease-in-out;
+        }
+
+        /* Full-screen video styling */
+        #fullscreen-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the video covers the entire screen */
+            z-index: -1; /* Places the video behind other content */
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <img id="dynamic-image" src="images/2.png" alt="Dynamic Image" class="center-horizontally">
+        <div class="container" id="box">
+            <p>Hey, how are you? I'm planning something for 15th feb. if you dont mind can you answer some question.</p>
+            <p>Are you ready for a quick survey?</p>
+            <button onclick="nextPage('startSurvey')">Yes</button>
+            <button onclick="alert('Pls tap yes 😜')">No</button>
+        </div>
+    </div>
+
+    <!-- Full-screen video -->
+    <video id="fullscreen-video" autoplay muted loop playsinline style="display: none;">
+        <source src="video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Audio for background music -->
+    <audio id="background-music" style="display: none;">
+        <source src="audio.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        let selections = [];
+        const images = [
+            "images/2.png", // Initial image
+            "images/3.png", // Image for startSurvey
+            "images/4.png", // Image for planDate
+            "images/5.png", // Image for chooseFood
+            "images/6.png", // Image for mood
+            "images/7.png", // Image for spicySweet
+            "images/8.png", // Image for selectSpicyFood
+            "images/9.png", // Image for selectSweetFood
+            "images/9.png", // Image for finalChoice
+        ];
+
+        function nextPage(step) {
+            // Update the image based on the step
+            const imageElement = document.getElementById("dynamic-image");
+            switch (step) {
+                case 'startSurvey':
+                    imageElement.src = images[1];
+                    break;
+                case 'planDate':
+                    imageElement.src = images[2];
+                    break;
+                case 'chooseFood':
+                    imageElement.src = images[3];
+                    break;
+                case 'mood':
+                    imageElement.src = images[4];
+                    break;
+                case 'spicySweet':
+                    imageElement.src = images[5];
+                    break;
+                case 'selectSpicyFood':
+                    imageElement.src = images[6];
+                    break;
+                case 'selectSweetFood':
+                    imageElement.src = images[7];
+                    break;
+                case 'finalChoice':
+                    imageElement.src = images[8];
+                    break;
+                default:
+                    imageElement.src = images[0]; // Default image
+            }
+
+            if (step === 'startSurvey') {
+                document.getElementById("box").innerHTML = `
+                    <p>Welcome Sehar-ul-Nisa! 💕</p>
+                    <p>Can you tap on Continue?</p>
+                    <button onclick="nextPage('planDate')">Continue</button>
+                `;
+            } else if (step === 'planDate') {
+                document.getElementById("box").innerHTML = `
+                    <p>I'm planning a date, so please help me out!!</p>
+                    <button onclick="nextPage('chooseFood')">Okay</button>
+                    <button onclick="nextPage('chooseFood')">yes plss!!!</button>
+                `;
+            } else if (step === 'chooseFood') {
+                document.getElementById("box").innerHTML = `
+                    <p>What do you want to eat?</p>
+                    <p>Ik you don't know! Ikr? So let me help you!!</p>
+                    <button onclick="nextPage('mood')">Continue</button>
+                    <button onclick="nextPage('planDate')">Go Back</button>
+                `;
+            } else if (step === 'mood') {
+                document.getElementById("box").innerHTML = `
+                    <p>What's your mood?</p>
+                    <button onclick="selectOption('Cooking', 'spicySweet')">Cooking</button>
+                    <button onclick="selectOption('Order', 'spicySweet')">Order</button>
+                    <button onclick="selectOption('Going Out', 'spicySweet')">Going Out</button>
+                    <button onclick="nextPage('chooseFood')">Go Back</button>
+                `;
+            } else if (step === 'spicySweet') {
+                document.getElementById("box").innerHTML = `
+                    <p>Spicy or Sweet?</p>
+                    <button onclick="selectOption('Spicy', 'selectSpicyFood')">Spicy 🍜</button>
+                    <button onclick="selectOption('Sweet', 'selectSweetFood')">Sweet 🍰</button>
+                    <button onclick="nextPage('mood')">Go Back</button>
+                `;
+            } else if (step === 'selectSpicyFood') {
+                document.getElementById("box").innerHTML = `
+                    <p>Choose your spicy food:</p>
+                    <button onclick="selectOption('Pasta', 'finalChoice')">Pasta 🍝</button>
+                    <button onclick="selectOption('Maggie', 'finalChoice')">Maggie 🍜</button>
+                    <button onclick="selectOption('Ramen', 'finalChoice')">Ramen 🍜</button>
+                    <button onclick="selectOption('Noodles', 'finalChoice')"> laughing 🍜</button>
+                    <button onclick="selectOption('Momos', 'finalChoice')">Momos 🥟</button>
+                    <button onclick="selectOption('Burger', 'finalChoice')">Burger 🍔</button>
+                    <button onclick="selectOption('Pizza', 'finalChoice')">Pizza 🍕</button>
+                    <button onclick="selectOption('Fries', 'finalChoice')">Fries 🍟</button>
+                    <button onclick="selectOption('Rolls', 'finalChoice')">Rolls 🌯</button>
+                    <button onclick="nextPage('spicySweet')">Go Back</button>
+                `;
+            } else if (step === 'selectSweetFood') {
+                document.getElementById("box").innerHTML = `
+                    <p>Choose your sweet food:</p>
+                    <button onclick="selectOption('Carrot Cake', 'finalChoice')">Carrot Cake 🥕🍰</button>
+                    <button onclick="selectOption('Gulab Jamun', 'finalChoice')">Gulab Jamun 🍡</button>
+                    <button onclick="selectOption('Jalebi', 'finalChoice')">Jalebi 🌀</button>
+                    <button onclick="selectOption('Hot Chocolate', 'finalChoice')">Chocolate 🍫</button>
+                    <button onclick="nextPage('spicySweet')">Go Back</button>
+                `;
+            } else if (step === 'finalChoice') {
+                showFinalChoice();
+            } else if (step === 'finalPage') {
+                // Hide the main container and show the full-screen video and play audio
+                document.querySelector('.main-container').style.display = 'none';
+                document.getElementById('fullscreen-video').style.display = 'block';
+                const audio = document.getElementById('background-music');
+                audio.play().catch(() => {
+                    // If autoplay is blocked, show a message to the user
+                    alert("Please click anywhere on the page to enable audio playback.");
+                });
+            }
+        }
+
+        function selectOption(choice, nextStep) {
+            selections.push(choice);
+            if (nextStep === 'finalChoice') {
+                showFinalChoice();
+            } else {
+                nextPage(nextStep);
+            }
+        }
+
+        function showFinalChoice() {
+            let foodChoice = selections[selections.length - 1];
+            document.getElementById("box").innerHTML = `
+                <p> Date is all planned!. see you on 15th feb. 🎉</p>
+                <p>Thank you for selecting: ${foodChoice}</p>
+                <button onclick="nextPage('finalPage')">Finish</button>
+            `;
+        }
+    </script>
+</body>
+</html>
