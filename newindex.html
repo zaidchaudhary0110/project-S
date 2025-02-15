@@ -102,24 +102,10 @@
         #fullscreen-video.visible {
             opacity: 1; /* Make video visible with transition */
         }
-
-        /* Access Denied Message */
-        .access-denied {
-            text-align: center;
-            font-size: 24px;
-            color: white;
-            font-weight: bold;
-            display: none; /* Hidden by default */
-        }
     </style>
 </head>
 <body>
     <div class="main-container">
-        <!-- Access Denied Message -->
-        <div class="access-denied" id="access-denied">
-            She will find you and beat you. 😠
-        </div>
-
         <!-- Survey Box -->
         <div class="container" id="box">
             <p>Hey, how are you? I'm planning something for 15th feb. if you dont mind can you answer some question.</p>
@@ -149,8 +135,9 @@
                 // Show the main content
                 document.querySelector('.main-container').style.display = 'flex';
             } else {
-                // Show the access denied message
-                document.getElementById('access-denied').style.display = 'block';
+                // If the code is incorrect, show an alert and reload the page
+                alert("Incorrect code. Please try again.");
+                location.reload(); // Reload the page
             }
         }
 
@@ -238,7 +225,7 @@
                         <button onclick="selectOption('Momos', 'finalChoice')">Momos 🥟</button>
                         <button onclick="selectOption('Burger', 'finalChoice')">Burger 🍔</button>
                         <button onclick="selectOption('Pizza', 'finalChoice')">Pizza 🍕</button>
-                        <button onclick="selectOption('Fries', 'finalChoice')">Fries 🍟</button>
+                        <button onclick="selectOption('Fries', 'finalChoice')">Fries �</button>
                         <button onclick="selectOption('Rolls', 'finalChoice')">Rolls 🌯</button>
                         <button onclick="nextPage('spicySweet')">Go Back</button>
                     `;
