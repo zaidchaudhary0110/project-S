@@ -7,15 +7,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
 
-        .center-horizontally {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 7cm;
-            height: 5cm;
-            animation: floatImage 3s ease-in-out infinite; /* Floating animation for the image */
-        }
-
         body {
             background: linear-gradient(45deg, #ff758c, #ff7eb3);
             display: flex;
@@ -41,9 +32,14 @@
             text-align: center;
             box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
             width: 320px;
-            animation: fadeIn 1.5s ease-in-out, floatBox 4s ease-in-out infinite; /* Added floating animation */
-            transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+            animation: fadeIn 1.5s ease-in-out, floatBox 3s ease-in-out infinite; /* Faster floating animation */
+            transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out, opacity 0.5s ease-in-out;
             margin-top: 20px;
+            opacity: 0; /* Start hidden for transition */
+        }
+
+        .container.visible {
+            opacity: 1; /* Make visible with transition */
         }
 
         .container:hover {
@@ -87,19 +83,7 @@
 
         @keyframes floatBox {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); } /* Floating effect */
-        }
-
-        @keyframes floatImage {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); } /* Floating effect for the image */
-        }
-
-        .meme {
-            width: 100%;
-            border-radius: 10px;
-            margin-top: 10px;
-            animation: popIn 0.5s ease-in-out;
+            50% { transform: translateY(-15px); } /* More floating effect */
         }
 
         /* Full-screen video styling */
@@ -111,17 +95,32 @@
             height: 100%;
             object-fit: cover; /* Ensures the video covers the entire screen */
             z-index: -1; /* Places the video behind other content */
+            opacity: 0; /* Start hidden for transition */
+            transition: opacity 1s ease-in-out;
         }
 
-        @keyframes popIn {
-            from { transform: scale(0); }
-            to { transform: scale(1); }
+        #fullscreen-video.visible {
+            opacity: 1; /* Make video visible with transition */
+        }
+
+        /* Access Denied Message */
+        .access-denied {
+            text-align: center;
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+            display: none; /* Hidden by default */
         }
     </style>
 </head>
 <body>
     <div class="main-container">
-        <img id="dynamic-image" src="images/2.png" alt="Dynamic Image" class="center-horizontally">
+        <!-- Access Denied Message -->
+        <div class="access-denied" id="access-denied">
+            She will find you and beat you. 😠
+        </div>
+
+        <!-- Survey Box -->
         <div class="container" id="box">
             <p>Hey, how are you? I'm planning something for 15th feb. if you dont mind can you answer some question.</p>
             <p>Are you ready for a quick survey?</p>
@@ -131,132 +130,139 @@
     </div>
 
     <!-- Full-screen video -->
-    <video id="fullscreen-video" autoplay muted loop playsinline style="display: none;">
+    <video id="fullscreen-video" autoplay muted loop playsinline>
         <source src="video.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
     <!-- Audio for background music -->
-    <audio id="background-music" style="display: none;">
+    <audio id="background-music">
         <source src="audio.mp3" type="audio/mp3">
         Your browser does not support the audio element.
     </audio>
 
     <script>
-        let selections = [];
-        const images = [
-            "images/2.png", // Initial image
-            "images/3.png", // Image for startSurvey
-            "images/4.png", // Image for planDate
-            "images/5.png", // Image for chooseFood
-            "images/6.png", // Image for mood
-            "images/7.png", // Image for spicySweet
-            "images/8.png", // Image for selectSpicyFood
-            "images/9.png", // Image for selectSweetFood
-            "images/9.png", // Image for finalChoice
-        ];
-
-        function nextPage(step) {
-            // Update the image based on the step
-            const imageElement = document.getElementById("dynamic-image");
-            switch (step) {
-                case 'startSurvey':
-                    imageElement.src = images[1];
-                    break;
-                case 'planDate':
-                    imageElement.src = images[2];
-                    break;
-                case 'chooseFood':
-                    imageElement.src = images[3];
-                    break;
-                case 'mood':
-                    imageElement.src = images[4];
-                    break;
-                case 'spicySweet':
-                    imageElement.src = images[5];
-                    break;
-                case 'selectSpicyFood':
-                    imageElement.src = images[6];
-                    break;
-                case 'selectSweetFood':
-                    imageElement.src = images[7];
-                    break;
-                case 'finalChoice':
-                    imageElement.src = images[8];
-                    break;
-                default:
-                    imageElement.src = images[0]; // Default image
+        // Function to check user input
+        function checkAccess() {
+            const userInput = prompt("Enter the secret code to proceed:");
+            if (userInput === "sehar") {
+                // Show the main content
+                document.querySelector('.main-container').style.display = 'flex';
+            } else {
+                // Show the access denied message
+                document.getElementById('access-denied').style.display = 'block';
             }
+        }
 
-            if (step === 'startSurvey') {
-                document.getElementById("box").innerHTML = `
-                    <p>Welcome Sehar-ul-Nisa! 💕</p>
-                    <p>Can you tap on Continue?</p>
-                    <button onclick="nextPage('planDate')">Continue</button>
-                `;
-            } else if (step === 'planDate') {
-                document.getElementById("box").innerHTML = `
-                    <p>I'm planning a date, so please help me out!!</p>
-                    <button onclick="nextPage('chooseFood')">Okay</button>
-                    <button onclick="nextPage('chooseFood')">yes plss!!!</button>
-                `;
-            } else if (step === 'chooseFood') {
-                document.getElementById("box").innerHTML = `
-                    <p>What do you want to eat?</p>
-                    <p>Ik you don't know! Ikr? So let me help you!!</p>
-                    <button onclick="nextPage('mood')">Continue</button>
-                    <button onclick="nextPage('planDate')">Go Back</button>
-                `;
-            } else if (step === 'mood') {
-                document.getElementById("box").innerHTML = `
-                    <p>What's your mood?</p>
-                    <button onclick="selectOption('Cooking', 'spicySweet')">Cooking</button>
-                    <button onclick="selectOption('Order', 'spicySweet')">Order</button>
-                    <button onclick="selectOption('Going Out', 'spicySweet')">Going Out</button>
-                    <button onclick="nextPage('chooseFood')">Go Back</button>
-                `;
-            } else if (step === 'spicySweet') {
-                document.getElementById("box").innerHTML = `
-                    <p>Spicy or Sweet?</p>
-                    <button onclick="selectOption('Spicy', 'selectSpicyFood')">Spicy 🍜</button>
-                    <button onclick="selectOption('Sweet', 'selectSweetFood')">Sweet 🍰</button>
-                    <button onclick="nextPage('mood')">Go Back</button>
-                `;
-            } else if (step === 'selectSpicyFood') {
-                document.getElementById("box").innerHTML = `
-                    <p>Choose your spicy food:</p>
-                    <button onclick="selectOption('Pasta', 'finalChoice')">Pasta 🍝</button>
-                    <button onclick="selectOption('Maggie', 'finalChoice')">Maggie 🍜</button>
-                    <button onclick="selectOption('Ramen', 'finalChoice')">Ramen 🍜</button>
-                    <button onclick="selectOption('Noodles', 'finalChoice')"> laughing 🍜</button>
-                    <button onclick="selectOption('Momos', 'finalChoice')">Momos 🥟</button>
-                    <button onclick="selectOption('Burger', 'finalChoice')">Burger 🍔</button>
-                    <button onclick="selectOption('Pizza', 'finalChoice')">Pizza 🍕</button>
-                    <button onclick="selectOption('Fries', 'finalChoice')">Fries 🍟</button>
-                    <button onclick="selectOption('Rolls', 'finalChoice')">Rolls 🌯</button>
-                    <button onclick="nextPage('spicySweet')">Go Back</button>
-                `;
-            } else if (step === 'selectSweetFood') {
-                document.getElementById("box").innerHTML = `
-                    <p>Choose your sweet food:</p>
-                    <button onclick="selectOption('Carrot Cake', 'finalChoice')">Carrot Cake 🥕🍰</button>
-                    <button onclick="selectOption('Gulab Jamun', 'finalChoice')">Gulab Jamun 🍡</button>
-                    <button onclick="selectOption('Jalebi', 'finalChoice')">Jalebi 🌀</button>
-                    <button onclick="selectOption('Hot Chocolate', 'finalChoice')">Chocolate 🍫</button>
-                    <button onclick="nextPage('spicySweet')">Go Back</button>
-                `;
-            } else if (step === 'finalChoice') {
-                showFinalChoice();
-            } else if (step === 'finalPage') {
-                // Hide the main container and show the full-screen video and play audio
-                document.querySelector('.main-container').style.display = 'none';
-                document.getElementById('fullscreen-video').style.display = 'block';
-                const audio = document.getElementById('background-music');
+        // Check access when the page loads
+        checkAccess();
+
+        let selections = [];
+
+        // Function to show the container with a transition
+        function showContainer() {
+            const container = document.getElementById("box");
+            container.classList.add("visible");
+        }
+
+        // Function to hide the container with a transition
+        function hideContainer() {
+            const container = document.getElementById("box");
+            container.classList.remove("visible");
+        }
+
+        // Function to show the video with a transition
+        function showVideo() {
+            const video = document.getElementById("fullscreen-video");
+            video.classList.add("visible");
+        }
+
+        // Function to play audio after a delay
+        function playAudio() {
+            const audio = document.getElementById("background-music");
+            setTimeout(() => {
                 audio.play().catch(() => {
                     // If autoplay is blocked, show a message to the user
                     alert("Please click anywhere on the page to enable audio playback.");
                 });
-            }
+            }, 1000); // 1-second delay
+        }
+
+        function nextPage(step) {
+            // Hide the container with a transition
+            hideContainer();
+
+            // Wait for the transition to complete before updating the content
+            setTimeout(() => {
+                if (step === 'startSurvey') {
+                    document.getElementById("box").innerHTML = `
+                        <p>Welcome Sehar-ul-Nisa! 💕</p>
+                        <p>Can you tap on Continue?</p>
+                        <button onclick="nextPage('planDate')">Continue</button>
+                    `;
+                } else if (step === 'planDate') {
+                    document.getElementById("box").innerHTML = `
+                        <p>I'm planning a date, so please help me out!!</p>
+                        <button onclick="nextPage('chooseFood')">Okay</button>
+                        <button onclick="nextPage('chooseFood')">yes plss!!!</button>
+                    `;
+                } else if (step === 'chooseFood') {
+                    document.getElementById("box").innerHTML = `
+                        <p>What do you want to eat?</p>
+                        <p>Ik you don't know! Ikr? So let me help you!!</p>
+                        <button onclick="nextPage('mood')">Continue</button>
+                        <button onclick="nextPage('planDate')">Go Back</button>
+                    `;
+                } else if (step === 'mood') {
+                    document.getElementById("box").innerHTML = `
+                        <p>What's your mood?</p>
+                        <button onclick="selectOption('Cooking', 'spicySweet')">Cooking</button>
+                        <button onclick="selectOption('Order', 'spicySweet')">Order</button>
+                        <button onclick="selectOption('Going Out', 'spicySweet')">Going Out</button>
+                        <button onclick="nextPage('chooseFood')">Go Back</button>
+                    `;
+                } else if (step === 'spicySweet') {
+                    document.getElementById("box").innerHTML = `
+                        <p>Spicy or Sweet?</p>
+                        <button onclick="selectOption('Spicy', 'selectSpicyFood')">Spicy 🍜</button>
+                        <button onclick="selectOption('Sweet', 'selectSweetFood')">Sweet 🍰</button>
+                        <button onclick="nextPage('mood')">Go Back</button>
+                    `;
+                } else if (step === 'selectSpicyFood') {
+                    document.getElementById("box").innerHTML = `
+                        <p>Choose your spicy food:</p>
+                        <button onclick="selectOption('Pasta', 'finalChoice')">Pasta 🍝</button>
+                        <button onclick="selectOption('Maggie', 'finalChoice')">Maggie 🍜</button>
+                        <button onclick="selectOption('Ramen', 'finalChoice')">Ramen 🍜</button>
+                        <button onclick="selectOption('Noodles', 'finalChoice')"> laughing 🍜</button>
+                        <button onclick="selectOption('Momos', 'finalChoice')">Momos 🥟</button>
+                        <button onclick="selectOption('Burger', 'finalChoice')">Burger 🍔</button>
+                        <button onclick="selectOption('Pizza', 'finalChoice')">Pizza 🍕</button>
+                        <button onclick="selectOption('Fries', 'finalChoice')">Fries 🍟</button>
+                        <button onclick="selectOption('Rolls', 'finalChoice')">Rolls 🌯</button>
+                        <button onclick="nextPage('spicySweet')">Go Back</button>
+                    `;
+                } else if (step === 'selectSweetFood') {
+                    document.getElementById("box").innerHTML = `
+                        <p>Choose your sweet food:</p>
+                        <button onclick="selectOption('Carrot Cake', 'finalChoice')">Carrot Cake 🥕🍰</button>
+                        <button onclick="selectOption('Gulab Jamun', 'finalChoice')">Gulab Jamun 🍡</button>
+                        <button onclick="selectOption('Jalebi', 'finalChoice')">Jalebi 🌀</button>
+                        <button onclick="selectOption('Hot Chocolate', 'finalChoice')">Chocolate 🍫</button>
+                        <button onclick="nextPage('spicySweet')">Go Back</button>
+                    `;
+                } else if (step === 'finalChoice') {
+                    showFinalChoice();
+                } else if (step === 'finalPage') {
+                    // Hide the main container and show the full-screen video and play audio
+                    document.querySelector('.main-container').style.display = 'none';
+                    showVideo(); // Show video with transition
+                    playAudio(); // Play audio after 1-second delay
+                }
+
+                // Show the container with a transition
+                showContainer();
+            }, 500); // Wait for the hide transition to complete
         }
 
         function selectOption(choice, nextStep) {
@@ -276,6 +282,9 @@
                 <button onclick="nextPage('finalPage')">Finish</button>
             `;
         }
+
+        // Show the initial container with a transition
+        showContainer();
     </script>
 </body>
 </html>
